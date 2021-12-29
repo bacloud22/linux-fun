@@ -8,16 +8,17 @@ spinner() {
     done
 }
 
-#clear >$(tty)
-echo -e "\bthis is first command"
-spinner & 
-nmap -A -T4 scanme.nmap.org
-sleep 10
+RED='\033[0;31m'
+NC='\033[0m' # No Color
 
-
-clear >$(tty)
-echo -e "\bthis is command second"
-ls
-
-kill "$!" # kill the spinner
-printf '\n'
+commend_runner() {
+    clear >$(tty)
+    printf "\nRunning >${RED} $1${NC}\n"
+    spinner & 
+    eval "$1"
+    sleep $2
+    kill "$!" # kill the spinner
+    printf '\n'
+}
+commend_runner "nmap -A -T4 scanme.nmap.org" 10
+commend_runner "ls -al" 10
